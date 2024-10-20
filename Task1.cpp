@@ -2,14 +2,12 @@
 
 #define Beans 8
 #define EspressoWater 30
-#define EspressoPrice 3.5
+
 #define CappuccinoWater 30
 #define CappuccinoMilk 70
-#define CappuccinoPrice 4.5
 #define MochaWater 39
 #define MochaMilk 160
 #define MochaCSyrup 30
-#define MochaPrice 5.5
 
 #define adminPass 12341234
 
@@ -20,6 +18,10 @@
 
 float total_amount;
 int coffeeBeans, water, milk, cSyrup, price;
+
+float CappuccinoPrice = 4.5;
+float MochaPrice = 5.5;
+float EspressoPrice = 3.5;
 
 void PrepareDrink(int option);
 void Payment(int option);
