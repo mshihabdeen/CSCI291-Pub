@@ -37,6 +37,7 @@ void Menu(int MenuOption);
 void AdminMode();
 void OrderCoffee(int OrderOption);
 void Replenish();
+void IngerdientsLow();
 /*bool Payment(int option);*/
 
 
@@ -144,4 +145,7 @@ void Replenish() {
 	water = 10 + rand() % 99;
 	milk = 10 + rand() % 99;
 	cSyrup = 10 + rand() % 99;
+}
+void IngredientsLow() {
+	if coffeeBeans < Beans_Min
 }
