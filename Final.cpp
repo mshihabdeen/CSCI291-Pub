@@ -125,7 +125,7 @@ void AdminMode() {
 
 		switch (j) {
 		case 0:
-			exit(0); /*Quit Application*/
+			break; /*Quit Admin Mode*/
 		case 1: /*Display ingredients and sales*/
 			printf("Ingredient Balance:\nCoffee Beans: %-12d\nWater: %-12d\nMilk: %-12d\nChocolate Syrup: %-12d\n\nTotal Sales: %12d\n\n", coffeeBeans, water, milk, cSyrup, total_amount);
 			printf("Would you like to reset sales amount?\n1. Yes\n2. No\n\n");
