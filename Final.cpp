@@ -26,9 +26,9 @@ float EspressoPrice = 3.5;
 int total_amount;
 
 /*Set Initial ingredient amounts*/
-int coffeeBeans = 400;
-int water = 200;
-int milk = 400;
+int coffeeBeans = 10;
+int water = 30;
+int milk = 160;
 int cSyrup = 200;
 
 /*Function Prototypes*/
@@ -186,24 +186,24 @@ void AdminMode() {
 }
 
 void Replenish() { /*replenishes ingredients randomly between minimum required and minimum+99*/
-	coffeeBeans = 10 + rand() % 99;
+	coffeeBeans = 8 + rand() % 99;
 	water = 30 + rand() % 99;
-	milk = 70 + rand() % 99;
-	cSyrup = 40 + rand() % 99;
+	milk = 160 + rand() % 99;
+	cSyrup = 30 + rand() % 99;
 }
 
 void IngredientsLow() { /*Alert User that ingredients are lower than the minimum required for a drink*/
 	if (coffeeBeans < Beans_Min){
-		printf("Beans Quantity is low");
+		printf("Beans Quantity is low\n");
 	}
 	if (milk < CAPPUCCINO_MILK_Min){
-		printf("Milk Quantity is low");
+		printf("Milk Quantity is low\n");
 	}
 	if (water < ESPRESSO_WATER_Min){
-		printf("Water Quantity is low");
+		printf("Water Quantity is low\n");
 	}
 	if (cSyrup < MOCHA_SYRUP_Min){
-		printf("Chocolate Syrup Quantity is Low");
+		printf("Chocolate Syrup Quantity is Low\n");
 	}
 }
 
