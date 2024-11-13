@@ -4,22 +4,28 @@
 #define nRows 8
 #define nCols 3
 // PROTOTYPES
-void print_array(int array[]);
+void print_array(int array[], int length);
 void print_matrix(int mat[][nCols], int rows);
-bool isValid(const int arr[], int pos);
-void remove_element(int arr[], int pos);
+bool isValid(const int arr[], int pos, int length);
+void remove_element(int arr[],int length, int pos);
+void insert_element(int arr[],int length, int pos, int value);
 
 
 int main()
 {
 int arr[SIZE];
 int arr2d[nRows][nCols];
-print_matrix(arr2d,nRows);
+
+int test[] = {0,1,2,3,4,5,6,7,8,9};
+print_array(test,10);
+insert_element(test,10,4,69);
+print_array(test,10);
+
+//print_matrix(arr2d,nRows);
 //Call to different functions
 }
 
-void print_array(int array[]){
-   int length = sizeof(array)/sizeof(array[0]);
+void print_array(int array[], int length){
 
    for(int i=0;i<length; i++)
       printf("array[%d]= %d\n", i, array[i]);
@@ -33,8 +39,7 @@ void print_matrix(int mat[][nCols], int rows){
    }     
 }
 
-bool isValid(const int arr[],int pos){
-   int length = sizeof(arr)/sizeof(arr[0]);
+bool isValid(const int arr[],int pos, int length){
 
    if (pos < (length-1) && pos > 0){
       return true;
@@ -44,16 +49,27 @@ bool isValid(const int arr[],int pos){
    }
 }
 
-void remove_element(int arr[], int pos){
-   int length = sizeof(arr)/sizeof(arr[0]);
-   bool valid = isValid(arr,pos);
-   int arrCopy[length];
-
-
+void remove_element(int arr[],int length, int pos){
+   bool valid = isValid(arr,pos,length);
    if (valid == true){
-      for (int i=pos;i<(length-1);i++){
-         arr[pos] = arrCopy[pos-1];
+      for (int i=pos; i>1;i--){
+         arr[i] = arr[i-1];
       }
    }
+   else{
+      printf("(Pos is Invalid)");
+   }
+}
 
+void insert_element(int arr[],int length, int pos, int value){
+   bool valid = isValid(arr,pos,length);
+   if (valid == true){
+      for (int i=1; i<pos+1;i++){
+         arr[i-1] = arr[i];
+      }
+      arr[pos] = value;
+   }
+   else{
+      printf("(Pos is Invalid)");
+   }
 }
