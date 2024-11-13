@@ -9,7 +9,7 @@ void print_matrix(int mat[][nCols], int rows);
 bool isValid(const int arr[], int pos, int length);
 void remove_element(int arr[],int length, int pos);
 void insert_element(int arr[],int length, int pos, int value);
-
+ void reshape(const int arr[], int length, int arr2d[nRows][nCols]);
 
 int main()
 {
@@ -18,10 +18,12 @@ int arr2d[nRows][nCols];
 
 int test[] = {0,1,2,3,4,5,6,7,8,9};
 print_array(test,10);
-insert_element(test,10,4,69);
-print_array(test,10);
+//insert_element(test,10,4,69);
+//print_array(test,10);
 
-//print_matrix(arr2d,nRows);
+reshape(test,10,arr2d);
+print_matrix(arr2d,nRows);
+
 //Call to different functions
 }
 
@@ -57,7 +59,7 @@ void remove_element(int arr[],int length, int pos){
       }
    }
    else{
-      printf("(Pos is Invalid)");
+      printf("GET OUTTT (Pos is Invalid)");
    }
 }
 
@@ -70,6 +72,23 @@ void insert_element(int arr[],int length, int pos, int value){
       arr[pos] = value;
    }
    else{
-      printf("(Pos is Invalid)");
+      printf("GET OUTTT (Pos is Invalid)");
    }
 }
+
+ void reshape(const int arr[], int length, int arr2d[nRows][nCols]){
+   if (length <= (nRows*nCols)){
+      int count = 0;
+      int test2[] = {0,1,2,3,4,5,6,7,8,9};
+
+      for (int i;i<nCols;i++){
+         for(int j;j<nRows;j++){
+            arr2d[j][i] = test2[i+j];
+         }
+      }
+   }
+   else{
+      printf("1D array has too many elements");
+      exit(-1);
+   }
+ }
