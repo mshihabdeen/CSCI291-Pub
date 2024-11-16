@@ -1,30 +1,37 @@
 #include<stdio.h> 
-#include <stdbool.h> 
+#include <stdbool.h>
+#include <stdlib.h>
+
+
 #define SIZE 24
 #define nRows 8
 #define nCols 3
+
 // PROTOTYPES
 void print_array(int array[], int length);
 void print_matrix(int mat[][nCols], int rows);
+
 bool isValid(const int arr[], int pos, int length);
 void remove_element(int arr[],int length, int pos);
 void insert_element(int arr[],int length, int pos, int value);
- void reshape(const int arr[], int length, int arr2d[nRows][nCols]);
+void reshape(const int arr[], int length, int arr2d[nRows][nCols]);
+void trans_matrix(int inputMat[nRows][nCols], int outputMat[nCols][nRows]);
+bool found_duplicate(int arr[],int length);
+
+//Variables
+int arr[SIZE];
+int arr2d[nRows][nCols];
+int mat_transp[nCols][nRows];
+int test[] = {0,1,2,3,4,5,6,7,7,8};
 
 int main()
 {
-int arr[SIZE];
-int arr2d[nRows][nCols];
 
-int test[] = {0,1,2,3,4,5,6,7,8,9};
-print_array(test,10);
-//insert_element(test,10,4,69);
-//print_array(test,10);
+bool truth = found_duplicate(test,10);
+printf("%d\n", truth);
 
-reshape(test,10,arr2d);
-print_matrix(arr2d,nRows);
 
-//Call to different functions
+
 }
 
 void print_array(int array[], int length){
@@ -40,6 +47,7 @@ void print_matrix(int mat[][nCols], int rows){
     puts("");     
    }     
 }
+
 
 bool isValid(const int arr[],int pos, int length){
 
@@ -76,19 +84,45 @@ void insert_element(int arr[],int length, int pos, int value){
    }
 }
 
- void reshape(const int arr[], int length, int arr2d[nRows][nCols]){
-   if (length <= (nRows*nCols)){
+void reshape(const int arr[], int length, int arr2d[nRows][nCols]){
+   if (length == (nRows*nCols)){
       int count = 0;
-      int test2[] = {0,1,2,3,4,5,6,7,8,9};
 
-      for (int i;i<nCols;i++){
-         for(int j;j<nRows;j++){
-            arr2d[j][i] = test2[i+j];
+      for (int i=0;i<nCols;i++){
+
+         for(int j=0;j<nRows;j++){
+
+            arr2d[j][i] = arr[count];
+            count++;
+            
          }
       }
    }
    else{
-      printf("1D array has too many elements");
+      printf("1D array length does not match number of elements in 2D array");
       exit(-1);
    }
  }
+
+void trans_matrix(int inputMat[nRows][nCols], int outputMat[nCols][nRows]){
+   for (int i=0;i<nRows;i++){
+
+         for(int j=0;j<nCols;j++){
+            inputMat[i][j] = outputMat[j][i];            
+         }
+      }
+}
+
+bool found_duplicate(int arr[],int length){
+   bool duplicate = false;
+   for(int i=0;i<length;i++){
+      for(int j=0;j<length;j++){
+         if (arr[i] == arr[j] && i != j){
+            duplicate = true;
+            break;
+         }
+      }
+   }
+
+   return duplicate;
+}
