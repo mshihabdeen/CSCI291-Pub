@@ -99,8 +99,8 @@ void add_player(team_t teams[], int teamcount) {
         return;
     }
 
-    printf("Pick a club (1 to %d): ", teamcount);
-    int clubid = -1;
+    printf("Pick a club (0 to %d): ", teamcount-1);
+    int clubid;
     scanf("%d", &clubid);
 
     if (clubid < 0 || clubid >= teamcount) {
