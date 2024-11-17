@@ -61,7 +61,7 @@ void remove_element(int arr[], int length, int pos) {
             arr[i] = arr[i - 1];
         }
     } else {
-        printf("GET OUTTT (Pos is Invalid)");
+        printf("Pos is Invalid");
     }
 }
 
@@ -74,7 +74,7 @@ void insert_element(int arr[], int length, int pos, int value) {
         }
         arr[pos] = value;
     } else {
-        printf("GET OUTTT (Pos is Invalid)");
+        printf("Pos is Invalid");
     }
 }
 
