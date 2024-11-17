@@ -58,7 +58,7 @@ int main() {
                 displayclubstats(teams, teamcount); // Display club statistics
                 break;
             default:
-                printf("Exiting program. Goodbye!\n");
+                printf("Exiting...\n");
                 return 0; // Exit the program
         }
     }
