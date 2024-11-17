@@ -4,28 +4,30 @@
 #define NUM_TEAMS 8
 #define SQUAD_SIZE 13
 
+// Structure to store date
 typedef struct {
     int day;
     int month;
     int year;
 } date_t;
 
+// Structure to store player information
 typedef struct {
-    char name[26]; // 25 Char + Null end
-    int kitnum;
-    char club[30];
-    date_t DOB;
-    char position[20]; 
+    char name[26]; // Player name (25 characters + Null)
+    int kitnum; // Kit number
+    char club[30]; // Club name
+    date_t DOB; // Date of birth
+    char position[20]; // Position on the field
 } player_t;
 
+// Structure to store team information
 typedef struct {
-    char name[21]; 
-    player_t players[SQUAD_SIZE];
-    int activeSize;
+    char name[21]; // Team name (20 characters + null)
+    player_t players[SQUAD_SIZE]; // Array of players
+    int activeSize; // Number of active players
 } team_t;
 
-//Prototypes
-
+// Function prototypes
 int display_menu();
 void enroll_club(team_t teams[], int *teamcount);
 void add_player(team_t teams[], int teamcount);
@@ -33,34 +35,40 @@ void search_update(team_t teams[], int teamcount);
 void displayclubstats(team_t teams[], int teamcount);
 void errormessage(const char *message);
 
+//Main
 int main() {
-    team_t teams[NUM_TEAMS];
-    int teamcount = 0;
+    team_t teams[NUM_TEAMS]; // Array to store teams
+    int teamcount = 0; // Number of teams enrolled
     int choice;
 
     while (1) {
-        choice = display_menu();
+        choice = display_menu(); // Display menu and get user choice
         
         switch (choice) {
             case 1:
-                enroll_club(teams, &teamcount);
+                enroll_club(teams, &teamcount); // Enroll a new club
                 break;
             case 2:
-                add_player(teams, teamcount);
+                add_player(teams, teamcount); // Add player to a club
                 break;
             case 3:
-                search_update(teams, teamcount);
+                search_update(teams, teamcount); // Search and update player details
                 break;
             case 4:
-                displayclubstats(teams, teamcount);
+                displayclubstats(teams, teamcount); // Display club statistics
                 break;
             default:
                 printf("Exiting program. Goodbye!\n");
-                return 0;
+                return 0; // Exit the program
         }
     }
 }
 
+
+//Functions
+
+
+  //Display menu and get user choice
 int display_menu() {
     int num;
     printf("||Menu||\n\n");
@@ -70,6 +78,7 @@ int display_menu() {
     return num;
 }
 
+ //enroll a new club
 void enroll_club(team_t teams[], int *teamcount) {
     if (*teamcount >= NUM_TEAMS) {
         errormessage("Maximum number of teams reached.");
@@ -78,11 +87,12 @@ void enroll_club(team_t teams[], int *teamcount) {
 
     printf("Enter club name: ");
     scanf(" %[^\n]", teams[*teamcount].name);
-    teams[*teamcount].activeSize = 0;
+    teams[*teamcount].activeSize = 0; // Initialize active player count
     (*teamcount)++;
     printf("Club enrolled successfully.\n");
 }
 
+ //add a player to a club
 void add_player(team_t teams[], int teamcount) {
     if (teamcount == 0) {
         errormessage("No clubs enrolled yet.");
@@ -104,7 +114,7 @@ void add_player(team_t teams[], int teamcount) {
     }
 
     player_t newplayer;
-    printf("Enter player name: ");
+    printf("Enter player name: "); //input player details
     scanf(" %[^\n]", newplayer.name);
     printf("Enter kit number: ");
     scanf("%d", &newplayer.kitnum);
@@ -121,11 +131,12 @@ void add_player(team_t teams[], int teamcount) {
         }
     }
 
-    teams[clubid].players[teams[clubid].activeSize] = newplayer;
-    teams[clubid].activeSize++;
+    teams[clubid].players[teams[clubid].activeSize] = newplayer; // Add player to the team
+    teams[clubid].activeSize++; // Increment active player count
     printf("Player added successfully.\n");
 }
 
+  //Display club statistics
 void displayclubstats(team_t teams[], int teamcount) {
     if (teamcount == 0) {
         errormessage("No clubs enrolled yet.");
@@ -138,7 +149,7 @@ void displayclubstats(team_t teams[], int teamcount) {
 
         if (teams[i].activeSize > 0) {
             int total_age = 0;
-            int current_year = 2024; // Update this to the current year
+            int current_year = 2024;
 
             for (int j = 0; j < teams[i].activeSize; j++) {
                 int age = current_year - teams[i].players[j].DOB.year;
@@ -155,7 +166,7 @@ void displayclubstats(team_t teams[], int teamcount) {
     }
 }
 
-
+  //Search and update player details
 void search_update(team_t teams[], int teamcount) {
     if (teamcount == 0) {
         errormessage("No clubs enrolled yet.");
@@ -242,7 +253,7 @@ void search_update(team_t teams[], int teamcount) {
     printf("Player details updated successfully.\n");
 }
 
-
+  //Display error messages
 void errormessage(const char *message) {
     printf("Error: %s\n", message);
 }
