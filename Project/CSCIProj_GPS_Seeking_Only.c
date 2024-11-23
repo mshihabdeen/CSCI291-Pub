@@ -155,3 +155,4 @@ int main() {
 
   wb_robot_cleanup();  // Cleanup Webots resources
   return 0;  // Exit the program
+}
