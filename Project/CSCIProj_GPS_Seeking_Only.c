@@ -18,6 +18,7 @@ void set_speed(double left_speed, double right_speed);
 void follow_wall();
 void record_light_intensity();
 void record_gps();
+void count_deadends();
 
 
 WbDeviceTag left_motor, right_motor; // Initialize motors
@@ -84,6 +85,21 @@ void wait(double seconds) {
   }
 }
 
+void count_deadends(){
+  double ps_values[8];
+  for (int i = 0; i < 8; i++) {
+    ps_values[i] = wb_distance_sensor_get_value(ps[i]);
+  }
+
+  bool front_wall = ps_values[0] < 57.0 || ps_values[7] < 30;
+  bool left_wall = ps_values[5] < 100|| ps_values[6] < 150;
+  bool right_wall = ps_values[2] < 200.0 || ps_values[1] < 200.0;
+
+  if (front_wall == true && right_wall == true && left_wall == true){
+    printf("Deadend Detected\n");
+  }
+}
+
 int main() {
   wb_robot_init();
   speaker = wb_robot_get_device("speaker");
@@ -117,6 +133,7 @@ int main() {
   while (wb_robot_step(TIME_STEP) != -1) {
     follow_wall();
     record_light_intensity();
+    count_deadends();
 
     double current_time = wb_robot_get_time();
 
@@ -136,6 +153,7 @@ int main() {
        record_light_intensity();
        const double *current_gps_values = wb_gps_get_values(gps);
        float buffer = 0.1;
+
         if (current_gps_values[0] < (brightest_gpsx+buffer) && current_gps_values[0] > (brightest_gpsx-buffer) && current_gps_values[1] < (brightest_gpsy+buffer) && current_gps_values[1] > (brightest_gpsy-buffer) ) {
           printf("Stopping at X: %f  Y: %f\n", current_gps_values[0],current_gps_values[1]);
           set_speed(0, 0);  // Stop the robot
@@ -143,17 +161,17 @@ int main() {
           break;
         }
 
-        
-        printf("Current Coordinates X: %f  Y: %f\n", current_gps_values[0],current_gps_values[1]);
-        printf("looking within range X: %f - %f | Y: %f - %f\n ",(brightest_gpsx-buffer),(brightest_gpsx+buffer),(brightest_gpsy-buffer),(brightest_gpsy+buffer));
+        //printf("Current Coordinates X: %f  Y: %f\n", current_gps_values[0],current_gps_values[1]);
+        //printf("looking within range X: %f - %f | Y: %f - %f\n ",(brightest_gpsx-buffer),(brightest_gpsx+buffer),(brightest_gpsy-buffer),(brightest_gpsy+buffer));
       }
       break;
     }
-    printf("Current run time: %f seconds\n", current_time - start_time);
-    printf("Highest light intensity so far: %f\n", highest_light_intensity);
-    printf("at X: %f  Y: %f\n ",brightest_gpsx,brightest_gpsy);
+    //printf("Current run time: %f seconds\n", current_time - start_time);
+    //printf("Highest light intensity so far: %f\n", highest_light_intensity);
+    //printf("at X: %f  Y: %f\n ",brightest_gpsx,brightest_gpsy);
   }
 
   wb_robot_cleanup();  // Cleanup Webots resources
   return 0;  // Exit the program
 }
+
