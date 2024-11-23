@@ -4,11 +4,12 @@
 #include <webots/light_sensor.h>
 #include <webots/gps.h>
 #include <stdio.h>
+#include <webots/speaker.h>
 
 
 #define TIME_STEP 64
 #define MAX_SPEED 6.28
-#define RUN_DURATION 720.0 // 12 minutes in seconds (5 * 60)
+#define RUN_DURATION 480.0 // 8 minutes in seconds (8 * 60)
 #define WAIT_DURATION 10.0 // Wait time in seconds
 
 
@@ -23,6 +24,7 @@ WbDeviceTag left_motor, right_motor; // Initialize motors
 WbDeviceTag ps[8]; // Initialize proximity sensors
 WbDeviceTag ls[8]; // Initialize light sensors
 WbDeviceTag gps; //Initialize GPS
+WbDeviceTag speaker; //initialize speaker
 
 
 double highest_light_intensity = -1.0;
@@ -47,9 +49,9 @@ void follow_wall() {
   bool left_wall = ps_values[5] > 100.0;
 
   if (front_wall) {
-    set_speed(1.0, -1.0);  // Turn right
+    set_speed(2.0, -1.0);  // Turn right
   } else if (left_wall) {
-    set_speed(2.0, 2.0);   // Move forward
+    set_speed(3.0, 3.0);   // Move forward
   } else {
     set_speed(-1.0, 2.0);  // Turn left
   }
@@ -84,8 +86,8 @@ void wait(double seconds) {
 
 int main() {
   wb_robot_init();
-  
-    gps= wb_robot_get_device("gps");
+  speaker = wb_robot_get_device("speaker");
+  gps= wb_robot_get_device("gps");
   wb_gps_enable(gps,TIME_STEP);
 
   // Get motors
@@ -137,6 +139,7 @@ int main() {
         if (current_gps_values[0] < (brightest_gpsx+buffer) && current_gps_values[0] > (brightest_gpsx-buffer) && current_gps_values[1] < (brightest_gpsy+buffer) && current_gps_values[1] > (brightest_gpsy-buffer) ) {
           printf("Stopping at X: %f  Y: %f\n", current_gps_values[0],current_gps_values[1]);
           set_speed(0, 0);  // Stop the robot
+          wb_speaker_speak(speaker, "Brightest Recorded Spot Reached", 1);
           break;
         }
 
@@ -146,8 +149,6 @@ int main() {
       }
       break;
     }
-
-    
     printf("Current run time: %f seconds\n", current_time - start_time);
     printf("Highest light intensity so far: %f\n", highest_light_intensity);
     printf("at X: %f  Y: %f\n ",brightest_gpsx,brightest_gpsy);
