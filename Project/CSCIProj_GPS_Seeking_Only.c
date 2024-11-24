@@ -18,7 +18,8 @@ void set_speed(double left_speed, double right_speed);
 void follow_wall();
 void record_light_intensity();
 void record_gps();
-void count_deadends();
+int count_deadends();
+bool cycle_one();
 
 
 WbDeviceTag left_motor, right_motor; // Initialize motors
@@ -32,8 +33,11 @@ double highest_light_intensity = -1.0;
 double threshold_light_intensity = -1.0;
 double start_time;
 double average_light_intensity = -1.0;
-float brightest_gpsx = 0, brightest_gpsy = 0;
-
+float brightest_gpsx = 0, brightest_gpsy = 0, start_gpsx = 0, start_gpsy = 0;
+bool waitfwlw=false;
+bool firstcycletrue = false;
+double firstFWLW_time = 10000;
+int deadend_count = 0;
 
 void set_speed(double left_speed, double right_speed) {
   wb_motor_set_velocity(left_motor, left_speed);
@@ -72,6 +76,19 @@ void record_light_intensity() {
   }
 }
 
+bool cycle_one(){
+  const double *current_gps_values = wb_gps_get_values(gps);
+  float buffer = 0.1;
+  
+  if (wb_robot_get_time() - start_time < 60){ return false;}
+
+  if (current_gps_values[0] < (start_gpsx+buffer) && current_gps_values[0] > (start_gpsx-buffer) && current_gps_values[1] < (start_gpsy+buffer) && current_gps_values[1] > (start_gpsy-buffer) ) {
+      printf("Initial Position Reached\n");
+      return true;
+    }
+  else{return false;}
+}
+
 void record_gps(){
   const double *brightest_gps_values = wb_gps_get_values(gps);
   brightest_gpsx = brightest_gps_values[0];
@@ -85,26 +102,49 @@ void wait(double seconds) {
   }
 }
 
-void count_deadends(){
+int count_deadends(){
+
+  if (firstcycletrue){
+     return deadend_count;
+  }
   double ps_values[8];
   for (int i = 0; i < 8; i++) {
     ps_values[i] = wb_distance_sensor_get_value(ps[i]);
+    //printf("%d: %f\n",i,ps_values[i]);
   }
 
-  bool front_wall = ps_values[0] < 57.0 || ps_values[7] < 30;
-  bool left_wall = ps_values[5] < 100|| ps_values[6] < 150;
-  bool right_wall = ps_values[2] < 200.0 || ps_values[1] < 200.0;
+  bool front_wall = ps_values[7] > 93; // || ps_values[7] > 93;
+  bool left_wall = ps_values[5] > 100;
+  
 
-  if (front_wall == true && right_wall == true && left_wall == true){
-    printf("Deadend Detected\n");
-  }
-}
+  if (front_wall==true && left_wall==true && waitfwlw == false){
+    firstFWLW_time = wb_robot_get_time();
+    
+   // printf("First FWLW detected\n");
+    waitfwlw = true;
+    }
+   
+   float wait_time = wb_robot_get_time()-firstFWLW_time;
+   //printf("wait time : %f \n",wait_time);
+  if (front_wall && left_wall && waitfwlw == true && wait_time>4.7 && wait_time<6 ){
+    
+     deadend_count++;
+     //printf("Deadend %d Detected\n",deadend_count);
+     waitfwlw = false;
+     }
+    if(wait_time>6){
+   // printf("wait reset\n");
+    waitfwlw = false;
+  
+        }
+        return deadend_count;}
 
 int main() {
   wb_robot_init();
   speaker = wb_robot_get_device("speaker");
   gps= wb_robot_get_device("gps");
   wb_gps_enable(gps,TIME_STEP);
+ 
 
   // Get motors
   left_motor = wb_robot_get_device("left wheel motor");
@@ -127,27 +167,31 @@ int main() {
     ls[i] = wb_robot_get_device(ls_names[i]);
     wb_light_sensor_enable(ls[i], TIME_STEP);
   }
+  
+  wait(1);
 
   start_time = wb_robot_get_time();
+  const double *start_gps_values = wb_gps_get_values(gps);
+  start_gpsx = start_gps_values[0];
+  start_gpsy = start_gps_values[1];
+  printf("Starting at X: %f  Y: %f\n", start_gpsx,start_gpsy);
+
 
   while (wb_robot_step(TIME_STEP) != -1) {
     follow_wall();
     record_light_intensity();
     count_deadends();
+    firstcycletrue = cycle_one();
 
     double current_time = wb_robot_get_time();
 
-    if (current_time - start_time >= RUN_DURATION) {
-      printf("Stopping after 5 minutes.\n");
+    if (firstcycletrue) {
+      printf("Pausing after reaching start position\n");
       set_speed(0, 0);  // Stop the robot
       wait(WAIT_DURATION);  // Wait for a few seconds
-
-      // Set the threshold light intensity
-      threshold_light_intensity = highest_light_intensity - 60 ;
-      printf("Set threshold light intensity: %f\n", threshold_light_intensity);
+      printf("Resuming\n");
 
       // Restart the robot and continue moving
-      start_time = wb_robot_get_time();
       while (wb_robot_step(TIME_STEP) != -1) {
        follow_wall();
        record_light_intensity();
@@ -174,4 +218,3 @@ int main() {
   wb_robot_cleanup();  // Cleanup Webots resources
   return 0;  // Exit the program
 }
-
