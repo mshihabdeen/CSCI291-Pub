@@ -9,7 +9,6 @@
 
 #define TIME_STEP 64
 #define MAX_SPEED 6.28
-#define RUN_DURATION 480.0 // 8 minutes in seconds (8 * 60)
 #define WAIT_DURATION 10.0 // Wait time in seconds
 
 
