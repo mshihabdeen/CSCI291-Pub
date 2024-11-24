@@ -205,14 +205,14 @@ int main() {
           break;
         }
 
-        //printf("Current Coordinates X: %f  Y: %f\n", current_gps_values[0],current_gps_values[1]);
-        //printf("looking within range X: %f - %f | Y: %f - %f\n ",(brightest_gpsx-buffer),(brightest_gpsx+buffer),(brightest_gpsy-buffer),(brightest_gpsy+buffer));
+        printf("Current Coordinates X: %f  Y: %f\n", current_gps_values[0],current_gps_values[1]);
+        printf("looking within range X: %f - %f | Y: %f - %f\n ",(brightest_gpsx-buffer),(brightest_gpsx+buffer),(brightest_gpsy-buffer),(brightest_gpsy+buffer));
       }
       break;
     }
-    //printf("Current run time: %f seconds\n", current_time - start_time);
-    //printf("Highest light intensity so far: %f\n", highest_light_intensity);
-    //printf("at X: %f  Y: %f\n ",brightest_gpsx,brightest_gpsy);
+
+    printf("Highest light intensity so far: %f\n", highest_light_intensity);
+    printf("at X: %f  Y: %f\n ",brightest_gpsx,brightest_gpsy);
   }
 
   wb_robot_cleanup();  // Cleanup Webots resources
