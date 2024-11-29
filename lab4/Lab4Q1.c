@@ -8,7 +8,7 @@ FILE *rfp;
 FILE *wfp;
 
 int main() {
-    rfp = fopen("data.txt", "r");
+    rfp = fopen("data.txt", "r");//open files
     wfp = fopen("output.txt", "w");
 
     if (rfp == NULL) {
