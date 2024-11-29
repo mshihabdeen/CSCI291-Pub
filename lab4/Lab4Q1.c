@@ -47,7 +47,7 @@ int main() {
       //print valid floats
     printf("\nThe number of valid floats in the file: %d\n", total_valid);
     for (int i = 0; i < total_valid; i++) {
-        printf("%f\n", values[i]);
+        printf("%.1f\n", values[i]);
         fprintf(wfp, "%.1f ",values[i]); // write to text file
     }
     
