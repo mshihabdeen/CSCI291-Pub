@@ -9,10 +9,11 @@ FILE *wfp;
 
 int main(){
       
-
+//open files
   rfp=fopen("data.txt","r");
   wfp=fopen("output.txt","w");
-  
+
+      // error handling
    if(rfp==NULL){
       // LINK Not created
       printf("Read text file stream was not created\n");
@@ -28,19 +29,17 @@ int main(){
     }
     else{printf("write text file stream created\n");}
 
-
-    /*while(fscanf(rfp,"%c", &ch)==1){
-       total_corrupt++;
-   }*/
-    
+    //set file pointer to beginning of file for redundancy
     fseek(rfp,0,SEEK_SET);
-    
+
+// check for char
    while(!feof(rfp)){
         //fscanf(rfp,"%f ", &value);
         fscanf(rfp,"%c ", &ch);
         
         int char_ascii = ch;
-        
+
+         //isalpha() also works here
         if(char_ascii>57){
             chars[total_corrupt] = ch;
             total_corrupt++;
@@ -52,13 +51,14 @@ int main(){
     
    }
 
-        
+//error handling
     if(ferror(rfp))
     printf(" HARDWARE FAILURE \n");
 
     if(ferror(wfp))
     printf(" HARDWARE FAILURE \n");
 
+//print results
     if(feof(rfp)){
         
         printf("\nThe number of chars in the file %d\n", total_corrupt);
