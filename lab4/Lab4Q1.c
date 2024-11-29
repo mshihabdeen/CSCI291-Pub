@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-char ch;
-float value,values[1000];
+char ch,chars[100];
+float value,values[100];
 int total_corrupt = 0,total_valid = 0;
 FILE *rfp;
 FILE *wfp;
@@ -32,10 +32,24 @@ int main(){
     /*while(fscanf(rfp,"%c", &ch)==1){
        total_corrupt++;
    }*/
-
-   while(fscanf(rfp,"%f", &value)==1){
-        values[total_valid] = value;
-        total_valid++;
+    
+    fseek(rfp,0,SEEK_SET);
+    
+   while(!feof(rfp)){
+        //fscanf(rfp,"%f ", &value);
+        fscanf(rfp,"%c ", &ch);
+        
+        int char_ascii = ch;
+        
+        if(char_ascii>57){
+            chars[total_corrupt] = ch;
+            total_corrupt++;
+        }
+       /* if (&value != NULL){
+            values[total_valid] = value;
+            total_valid++;
+        }*/
+    
    }
 
         
@@ -47,15 +61,19 @@ int main(){
 
     if(feof(rfp)){
         
-        printf("\n the number of chars in the file %d", total_corrupt);
+        printf("\nThe number of chars in the file %d\n", total_corrupt);
         
         for (int i=0;i<total_valid;i++){
             printf("%f\n",values[i]);
         }
         
+        return 0;
+        
     }
     else{
-    printf("EOF was not reached\n");}
+    printf("EOF was not reached\n");
+    return -1;
+    }
     
     
 
@@ -64,3 +82,4 @@ int main(){
 
     getchar();
     return 0;
+}
